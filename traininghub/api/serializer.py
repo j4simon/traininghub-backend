@@ -1,16 +1,14 @@
+from dataclasses import fields
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 import django.contrib.auth.password_validation as validations
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
+from taggit.serializers import (TagListSerializerField, TaggitSerializer)
 
 from api.models import Training
 User = get_user_model()
 
-class TrainingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Training
-        fields = '__all__'
 
 class UserSerializer(serializers.ModelSerializer):
     
@@ -36,3 +34,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'email', 'password', 'password_confirmation',)
+        
+        
+class TrainingSerializer(TaggitSerializer, serializers.ModelSerializer):
+    
+    tags = TagListSerializerField()
+    
+    class Meta:
+        model =  Training
+        fields = '__all__'

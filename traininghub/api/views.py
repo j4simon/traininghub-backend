@@ -3,10 +3,10 @@ from django.shortcuts import render, redirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .forms import TrainingForm
+from .forms import TrainingForm, TopicForm
 from api.serializer import UserSerializer
 from .serializer import TrainingSerializer, UserSerializer
-from .models import Training
+from .models import Training, Topic
 from rest_framework.views import APIView
 from rest_framework.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
@@ -16,18 +16,31 @@ User = get_user_model()
 
 
 # Create your views here.
-def home(request):
-    return HTTPResponse('<h1>Welcome!</h1>')
 
-def training_new(request):
-    if request.method == 'POST':
-        form = TrainingForm(request.POST)
-        if form.is_valid():
-            training = form.save()
-            return redirect('training_list')
-    else:
-        form = TrainingForm()
-    return render(request, 'api/training_form.html', {'form':form})
+
+class TrainingNew(APIView):
+    def get(self, request):
+        if request.method == 'POST':
+            form = TrainingForm(request.POST)
+            if form.is_valid():
+                training = form.save()
+                return redirect('training_list')
+        else:
+            form = TrainingForm()
+        return render(request, 'api/training_form.html', {'form':form})
+
+class TopicNew(APIView):
+    def get(self, request):
+        if request.method == 'POST':
+            form = TopicForm(request.POST)
+            if form.is_valid():
+                training = form.save()
+                return redirect('training_list')
+        else:
+            form = TopicForm()
+        return render(request, 'api/topic_form.html', {'form':form})
+
+
 
 # def training_list(request):
 #     training = Training.objects.all()
@@ -41,11 +54,6 @@ class TrainingView(APIView):
         return Response(serializer.data)
 
 
-# class CatsView(APIView):
-#     def get(self, request):
-#         cats = Cat.objects.all()
-#         serializer = CatSerializer(cats, many=True)
-#         return Response(serializer.data)
 class RegisterView(APIView):
 
     def post(self, request):
