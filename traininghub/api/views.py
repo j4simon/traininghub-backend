@@ -2,57 +2,53 @@ from http.client import HTTPResponse
 from django.shortcuts import render, redirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import viewsets
+from rest_framework.permissions import IsAdminUser, DjangoModelPermissions, BasePermission
 
-from .forms import TrainingForm, TopicForm
+from .forms import TopicForm
 from api.serializer import UserSerializer
-from .serializer import TrainingSerializer, UserSerializer
-from .models import Training, Topic
+from .serializer import TrainingSerializer, UserSerializer, TopicSerializer, QuizQuestionSerializer, QuizSerializer, ModuleSerializer
+from .models import Training, Topic, QuizQuestion, Quiz, Module
 from rest_framework.views import APIView
 from rest_framework.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
 from django.conf import settings
 import jwt
+
+from api import serializer
 User = get_user_model()
 
 
 # Create your views here.
+    
 
+class TrainingView(viewsets.ModelViewSet):
+    serializer_class = TrainingSerializer
+    queryset = Training.objects.all()
+    
+    def get(self,request):
+        response = request.get('http://api/training_list.com')
+        return render(request, 'training_list.html', {'response' : response})
 
-class TrainingNew(APIView):
-    def get(self, request):
-        if request.method == 'POST':
-            form = TrainingForm(request.POST)
-            if form.is_valid():
-                training = form.save()
-                return redirect('training_list')
-        else:
-            form = TrainingForm()
-        return render(request, 'api/training_form.html', {'form':form})
+class TrainingNew(viewsets.ModelViewSet):
+    serializer_class = TrainingSerializer
+    queryset = Training.objects.all()
 
-class TopicNew(APIView):
-    def get(self, request):
-        if request.method == 'POST':
-            form = TopicForm(request.POST)
-            if form.is_valid():
-                training = form.save()
-                return redirect('training_list')
-        else:
-            form = TopicForm()
-        return render(request, 'api/topic_form.html', {'form':form})
+class TopicNew(viewsets.ModelViewSet):
+        serializer_class = TopicSerializer
+        queryset = Topic.objects.all()
 
+class QuizQuestion(viewsets.ModelViewSet):
+        serializer_class = QuizQuestionSerializer
+        queryset = QuizQuestion.objects.all()
 
+class Quiz(viewsets.ModelViewSet):
+        serializer_class = QuizSerializer
+        queryset = Quiz.objects.all()
 
-# def training_list(request):
-#     training = Training.objects.all()
-#     serializer = TrainingSerializer(training, many=True)
-#     return Response(serializer.data)
-
-class TrainingView(APIView):
-    def get(self, request):
-        training = Training.objects.all()
-        serializer = TrainingSerializer(training, many=True)
-        return Response(serializer.data)
-
+class Module(viewsets.ModelViewSet):
+        serializer_class = ModuleSerializer
+        queryset = Module.objects.all()
 
 class RegisterView(APIView):
 

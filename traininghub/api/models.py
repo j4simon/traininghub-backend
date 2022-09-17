@@ -1,6 +1,6 @@
 from time import timezone
 from django.db import models
-from taggit.managers import TaggableManager
+# from taggit.managers import TaggableManager
 from django.utils.timezone import now
 # Create your models here.
 
@@ -17,16 +17,16 @@ from django.utils.timezone import now
     # def __str__(self):
     #     return self.topic
 class Topic(models.Model):
-    topic = models.CharField(max_length=15)
+    topic = models.CharField(max_length=50)
     
     def __str__(self):
         return self.topic
 
 class Training(models.Model):
-    title = models.CharField(max_length=25)
+    title = models.CharField(max_length=50)
     details = models.CharField(max_length=250, null=True)
-    created = models.DateField(default=now, editable=False) 
-    tags = TaggableManager
+    created = models.DateTimeField(default=now, editable=False) 
+    topics = models.ManyToManyField(Topic)
 
     def __str__(self):
         return self.title
@@ -34,7 +34,7 @@ class Training(models.Model):
 class Module(models.Model):
     title = models.CharField(max_length=50)
     training = models.ManyToManyField(Training)
-    created = models.DateField(default=now, editable=False) 
+    created = models.DateTimeField(default=now, editable=False) 
 
     def __str__(self):
         return self.title   
@@ -42,14 +42,19 @@ class Module(models.Model):
     
   
 class QuizQuestion(models.Model):
-    question = models.CharField(max_length=50)
-    option1 = models.CharField(max_length=25)
-    option2 = models.CharField(max_length=25)
-    option3 = models.CharField(max_length=25)
-    option4 = models.CharField(max_length=25)
-    answer = models.CharField(max_length=25)
+    question = models.CharField(max_length=100)
+    option1 = models.CharField(max_length=50)
+    option2 = models.CharField(max_length=50)
+    option3 = models.CharField(max_length=50)
+    option4 = models.CharField(max_length=50)
+    answer = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return self.question
     
 class Quiz(models.Model):
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=50, default='title')
     questions = models.ManyToManyField(QuizQuestion)
     
+    def __str__(self):
+        return self.title

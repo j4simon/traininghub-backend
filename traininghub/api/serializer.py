@@ -4,9 +4,7 @@ from django.contrib.auth import get_user_model
 import django.contrib.auth.password_validation as validations
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
-from taggit.serializers import (TagListSerializerField, TaggitSerializer)
-
-from api.models import Training
+from api.models import Training, Module,Topic, Quiz, QuizQuestion
 User = get_user_model()
 
 
@@ -36,10 +34,36 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'password', 'password_confirmation',)
         
         
-class TrainingSerializer(TaggitSerializer, serializers.ModelSerializer):
+class TrainingSerializer(serializers.ModelSerializer):
     
-    tags = TagListSerializerField()
+    def get(self,request):
+        response = request.get('http://api/training_list.com')
+        return render(request, 'training_list.html', {'response' : response})
     
     class Meta:
         model =  Training
+        fields = '__all__'
+        
+class ModuleSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model =  Module
+        fields = '__all__'
+        
+class TopicSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model =  Topic
+        fields = '__all__'
+        
+class QuizQuestionSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model =  QuizQuestion
+        fields = '__all__'
+        
+class QuizSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model =  Quiz
         fields = '__all__'
