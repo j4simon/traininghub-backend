@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Training, Topic, Module, QuizQuestion, Quiz
 
 class TrainingAdmin(admin.ModelAdmin):
-    list_display = ('title','detail','created','topics')
+    list_display = ('title','detail','created')
 
 class TopicAdmin(admin.ModelAdmin):
     list_display = ('topic')

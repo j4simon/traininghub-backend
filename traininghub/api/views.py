@@ -1,4 +1,3 @@
-from http.client import HTTPResponse
 from django.shortcuts import render, redirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -13,6 +12,7 @@ from rest_framework.views import APIView
 from rest_framework.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 import jwt
 
 from api import serializer
@@ -24,15 +24,12 @@ User = get_user_model()
 
 class TrainingView(viewsets.ModelViewSet):
     serializer_class = TrainingSerializer
-    queryset = Training.objects.all()
+    queryset = Training.objects.all()    
     
-    def get(self,request):
-        response = request.get('http://api/training_list.com')
-        return render(request, 'training_list.html', {'response' : response})
-
-class TrainingNew(viewsets.ModelViewSet):
-    serializer_class = TrainingSerializer
-    queryset = Training.objects.all()
+    
+# class TrainingNew(viewsets.ModelViewSet):
+#     serializer_class = TrainingSerializer
+#     queryset = Training.objects.all()
 
 class TopicNew(viewsets.ModelViewSet):
         serializer_class = TopicSerializer
