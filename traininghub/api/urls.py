@@ -4,7 +4,6 @@ from . import views
 
 router = routers.SimpleRouter()
 router.register(r'training',views.TrainingView,basename='training')
-# router.register(r'training-list',views.TrainingView,basename='training')
 router.register(r'topic',views.TopicNew,basename='topic')
 router.register(r'quiz-question',views.QuizQuestion,basename='quizQuestion')
 router.register(r'quiz',views.Quiz,basename='quiz')

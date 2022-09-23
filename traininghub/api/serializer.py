@@ -1,4 +1,6 @@
+from cgitb import lookup
 from dataclasses import fields
+from socketserver import ThreadingUnixDatagramServer
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 import django.contrib.auth.password_validation as validations
@@ -35,6 +37,7 @@ class UserSerializer(serializers.ModelSerializer):
         
         
 class TrainingSerializer(serializers.ModelSerializer):
+    # trainingurl= serializers.HyperlinkedIdentityField(view_name="training")
     
     def get(self,request):
         response = request.get('http://api/training_list.com')
